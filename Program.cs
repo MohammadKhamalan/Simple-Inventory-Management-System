@@ -73,6 +73,14 @@ namespace Simple_Inventory_Management_System
                         inventory.Delete_product(product_name);
                         break;
 
+                    case "5":
+                        Console.WriteLine("Enter the name of the product you want to search:");
+                        product_name = Console.ReadLine();
+                        inventory.search_for_product(product_name);
+                        break;
+
+                    
+
                     default:
                         Console.WriteLine("Invalid option. Try again.");
                         break;

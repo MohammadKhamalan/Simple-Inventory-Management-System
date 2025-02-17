@@ -82,6 +82,17 @@ namespace Simple_Inventory_Management_System
             
             
             }
+        public void search_for_product(string product_name)
+        {
+            Product product = products.Find((p => p.Get_Name().Equals(product_name, StringComparison.OrdinalIgnoreCase)));
+            if (product == null)
+            {
+                Console.WriteLine("Product Not Found");
+                return;
+            }
+            Console.WriteLine($"Product Found: \nName: {product.Get_Name()} \nPrice: {product.Get_Price()} \nQuantity: {product.Get_Quantity()}");
+
+        }
 
     }
 }
