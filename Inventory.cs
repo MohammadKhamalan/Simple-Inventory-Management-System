@@ -69,5 +69,19 @@ namespace Simple_Inventory_Management_System
             }
             }
 
+        public void Delete_product(string product_name)
+        {
+            Product product = products.Find((p => p.Get_Name().Equals(product_name, StringComparison.OrdinalIgnoreCase)));
+            if (product == null)
+            {
+                Console.WriteLine("Product Not Found");
+                return;
+            }
+            products.Remove(product);
+            Console.WriteLine($"Product {product.Get_Name()} deleted successfully");
+            
+            
+            }
+
     }
 }
