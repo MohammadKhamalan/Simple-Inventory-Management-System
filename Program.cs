@@ -8,7 +8,9 @@ namespace Simple_Inventory_Management_System
         {
             
             Inventory inventory = new Inventory();
-            
+            string product_name;
+
+
             while (true)
             {
                 Console.WriteLine("\nInventory Management System");
@@ -62,8 +64,13 @@ namespace Simple_Inventory_Management_System
                         break;
                     case "3":
                         Console.WriteLine("Enter the name of the product you want to edit:");
-                        String product_name = Console.ReadLine();
+                         product_name = Console.ReadLine();
                         inventory.Edit_product(product_name);
+                        break;
+                    case "4":
+                        Console.WriteLine("Enter the name of the product you want to Delete:");
+                         product_name = Console.ReadLine();
+                        inventory.Delete_product(product_name);
                         break;
 
                     default:
