@@ -79,7 +79,10 @@ namespace Simple_Inventory_Management_System
                         inventory.search_for_product(product_name);
                         break;
 
-                    
+
+                    case "6":
+                        Console.WriteLine("Exiting the application...");
+                        return;
 
                     default:
                         Console.WriteLine("Invalid option. Try again.");
