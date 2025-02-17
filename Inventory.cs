@@ -12,6 +12,19 @@ namespace Simple_Inventory_Management_System
             products.Add(product);
             Console.WriteLine($"product {product.Get_Name()} added successfully");
         }
+        public void View_products()
+        {
+            if (products.Count == 0)
+            {
+                Console.WriteLine("No products available.");
+                return;
+            }
+            Console.WriteLine("\n List of products:");
+            foreach(var product in products)
+            {
+                Console.WriteLine(product.ToString());
+            }
+        }
 
     }
 }

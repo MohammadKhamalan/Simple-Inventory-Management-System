@@ -57,7 +57,9 @@ namespace Simple_Inventory_Management_System
                         inventory.Add_product(new Product(name, price, quantity));
                         break;
 
-
+                    case "2":
+                        inventory.View_products();
+                        break;
                     default:
                         Console.WriteLine("Invalid option. Try again.");
                         break;
