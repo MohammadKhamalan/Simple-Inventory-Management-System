@@ -20,7 +20,29 @@ namespace Simple_Inventory_Management_System
         {
             return Name; 
         }
-       
+        public decimal Get_Price()
+        { 
+            return Price;
+        }
+        public int Get_Quantity()
+        {
+            return Quantity;
+        }
+       public void Set_Name(string name)
+        {
+            Name = name;
+        }
+        public void Set_Price(decimal price)
+        {
+           
+            Price = price;
+
+        }
+        public void Set_Quantity(int quantity)
+        {
+           
+            Quantity = quantity;
+        }
         public override string ToString()
         {
             return $"Product: {Name}, Price:{Price}, Quantuty:{Quantity}";

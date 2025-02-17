@@ -60,6 +60,12 @@ namespace Simple_Inventory_Management_System
                     case "2":
                         inventory.View_products();
                         break;
+                    case "3":
+                        Console.WriteLine("Enter the name of the product you want to edit:");
+                        String product_name = Console.ReadLine();
+                        inventory.Edit_product(product_name);
+                        break;
+
                     default:
                         Console.WriteLine("Invalid option. Try again.");
                         break;
