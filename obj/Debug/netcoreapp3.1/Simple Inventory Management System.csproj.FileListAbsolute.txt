@@ -4,10 +4,11 @@ C:\Users\ASUS\Desktop\Simple Inventory Management System\bin\Debug\netcoreapp3.1
 C:\Users\ASUS\Desktop\Simple Inventory Management System\bin\Debug\netcoreapp3.1\Simple Inventory Management System.runtimeconfig.dev.json
 C:\Users\ASUS\Desktop\Simple Inventory Management System\bin\Debug\netcoreapp3.1\Simple Inventory Management System.dll
 C:\Users\ASUS\Desktop\Simple Inventory Management System\bin\Debug\netcoreapp3.1\Simple Inventory Management System.pdb
-C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.csprojAssemblyReference.cache
 C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.AssemblyInfoInputs.cache
 C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.AssemblyInfo.cs
 C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.csproj.CoreCompileInputs.cache
 C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.dll
 C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.pdb
 C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.genruntimeconfig.cache
+C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\Desktop\Simple Inventory Management System\obj\Debug\netcoreapp3.1\Simple Inventory Management System.sourcelink.json
