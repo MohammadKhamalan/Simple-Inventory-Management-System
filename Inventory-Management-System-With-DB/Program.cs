@@ -27,7 +27,20 @@ namespace Inventory_Management_System
                     case "1":
                         Console.Write("Enter the name of the product: ");
                         string name = Console.ReadLine();
+                        while (true)
+                        {
+                            Console.Write("Enter the name of the product: ");
+                            name = Console.ReadLine();
 
+                            if (string.IsNullOrEmpty(name))
+                            {
+                                Console.WriteLine("Product name cannot be empty. Please enter a valid name.");
+                            }
+                            else
+                            {
+                                break; 
+                            }
+                        }
                         decimal price;
                         Console.Write("Enter the price of the product: ");
                         while (!decimal.TryParse(Console.ReadLine(), out price) || price < 0)
