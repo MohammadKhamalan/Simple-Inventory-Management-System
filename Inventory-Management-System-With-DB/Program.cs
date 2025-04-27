@@ -2,13 +2,27 @@
 using Inventory_Management_System.Models;
 using Inventory_Management_System.Services;
 
+
 namespace Inventory_Management_System
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var inventory = new Inventory();
+           
+
+            Console.WriteLine("Choose your database:");
+            Console.WriteLine("Type 'SQL' for Microsoft SQL Server or 'Mongo' for MongoDB");
+            string dbChoice = Console.ReadLine().Trim().ToLower(); // <-- important: trim and lower
+
+            while (dbChoice != "sql" && dbChoice != "mongo")
+            {
+                Console.WriteLine("Invalid choice. Please type 'SQL' or 'Mongo'.");
+                dbChoice = Console.ReadLine().Trim().ToLower();
+            }
+
+            var inventory = new Inventory(dbChoice);
+
             string product_name;
 
             while (true)
@@ -25,12 +39,12 @@ namespace Inventory_Management_System
                 switch (choice)
                 {
                     case "1":
-                        Console.Write("Enter the name of the product: ");
-                        string name = Console.ReadLine();
+
+                        string name;
                         while (true)
                         {
                             Console.Write("Enter the name of the product: ");
-                            name = Console.ReadLine();
+                           name = Console.ReadLine();
 
                             if (string.IsNullOrEmpty(name))
                             {

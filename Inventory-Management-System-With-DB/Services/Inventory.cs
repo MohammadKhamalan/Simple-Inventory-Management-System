@@ -8,23 +8,38 @@ namespace Inventory_Management_System.Services
 {
     public class Inventory : IInventory
     {
-        private readonly InventorySql _dbConnection;
+        private readonly InventorySql _sqlConnection;
+        private readonly InventoryMongo _mongoConnection;
+        private readonly string _dbChoice;
 
-        public Inventory()
+        public Inventory(string dbChoice)
         {
-            _dbConnection = new InventorySql();
+            _dbChoice = dbChoice.ToLower();
+            _sqlConnection = new InventorySql();
+            _mongoConnection = new InventoryMongo();
         }
-
 
         public void Add_product(Product product)
         {
-            _dbConnection.AddProduct(product);
-            Console.WriteLine($"Product {product.Name} added successfully.");
+            try
+            {
+                if (_dbChoice == "sql")
+                    _sqlConnection.AddProduct(product);
+                else
+                    _mongoConnection.AddProduct(product);
+
+                Console.WriteLine($"Product {product.Name} added successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to add product. Error: {ex.Message}");
+            }
         }
+
 
         public void View_products()
         {
-            var products = _dbConnection.GetAllProducts();
+            List<Product> products = (_dbChoice == "sql") ? _sqlConnection.GetAllProducts() : _mongoConnection.GetAllProducts();
 
             if (products.Count == 0)
             {
@@ -41,7 +56,8 @@ namespace Inventory_Management_System.Services
 
         public void Edit_product(string product_name)
         {
-            var existingProduct = _dbConnection.SearchProduct(product_name);
+            Product existingProduct = (_dbChoice == "sql") ? _sqlConnection.SearchProduct(product_name) : _mongoConnection.SearchProduct(product_name);
+
             if (existingProduct == null)
             {
                 Console.WriteLine("Product not found.");
@@ -82,26 +98,44 @@ namespace Inventory_Management_System.Services
                 Console.Write("Invalid quantity.");
             }
 
-            _dbConnection.UpdateProduct(product_name, existingProduct);
+            if (_dbChoice == "sql")
+                _sqlConnection.UpdateProduct(product_name, existingProduct);
+            else
+                _mongoConnection.UpdateProduct(product_name, existingProduct);
+
             Console.WriteLine("Product updated successfully.");
         }
 
         public void Delete_product(string product_name)
         {
-            var existingProduct = _dbConnection.SearchProduct(product_name);
-            if (existingProduct == null)
+            if (_dbChoice == "sql")
             {
-                Console.WriteLine("Product not found.");
-                return;
+                var existingProduct = _sqlConnection.SearchProduct(product_name);
+                if (existingProduct == null)
+                {
+                    Console.WriteLine("Product not found.");
+                    return;
+                }
+                _sqlConnection.DeleteProduct(product_name);
+            }
+            else
+            {
+                var existingProduct = _mongoConnection.SearchProduct(product_name);
+                if (existingProduct == null)
+                {
+                    Console.WriteLine("Product not found.");
+                    return;
+                }
+                _mongoConnection.DeleteProduct(product_name);
             }
 
-            _dbConnection.DeleteProduct(product_name);
             Console.WriteLine($"Product {product_name} deleted successfully.");
         }
 
         public void search_for_product(string product_name)
         {
-            var product = _dbConnection.SearchProduct(product_name);
+            Product product = (_dbChoice == "sql") ? _sqlConnection.SearchProduct(product_name) : _mongoConnection.SearchProduct(product_name);
+
             if (product == null)
             {
                 Console.WriteLine("Product not found.");
@@ -111,4 +145,5 @@ namespace Inventory_Management_System.Services
             Console.WriteLine($"Product Found:\nName: {product.Name}\nPrice: {product.Price}\nQuantity: {product.Quantity}");
         }
     }
+
 }
