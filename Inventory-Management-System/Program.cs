@@ -35,9 +35,9 @@ namespace Inventory_Management_System
                             Console.Write("Invalid price input. Please enter a valid price: ");
                         }
 
-                        int quantity;
+                        decimal quantity;
                         Console.Write("Enter the quantity of the product: ");
-                        while (!int.TryParse(Console.ReadLine(), out quantity) || quantity < 0)
+                        while (!decimal.TryParse(Console.ReadLine(), out quantity) || quantity < 0)
                         {
                             Console.Write("Invalid quantity input. Please enter a valid quantity: ");
                         }
