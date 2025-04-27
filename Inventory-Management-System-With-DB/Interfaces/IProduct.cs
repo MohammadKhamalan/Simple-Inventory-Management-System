@@ -6,7 +6,7 @@ namespace Inventory_Management_System.Interfaces
     {
         string Name { get; set; }
         decimal Price { get; set; }
-        int Quantity { get; set; }
+        decimal Quantity { get; set; }
         string ToString();
     }
 }
