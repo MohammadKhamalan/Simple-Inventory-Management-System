@@ -13,7 +13,7 @@ namespace Inventory_Management_System
 
             Console.WriteLine("Choose your database:");
             Console.WriteLine("Type 'SQL' for Microsoft SQL Server or 'Mongo' for MongoDB");
-            string dbChoice = Console.ReadLine().Trim().ToLower(); // <-- important: trim and lower
+            string dbChoice = Console.ReadLine().Trim().ToLower();
 
             while (dbChoice != "sql" && dbChoice != "mongo")
             {

@@ -10,24 +10,30 @@ namespace Inventory_Management_System.Services
     {
         private readonly InventorySql _sqlConnection;
         private readonly InventoryMongo _mongoConnection;
-        private readonly string _dbChoice;
+        private readonly Action<Product> _addProduct;
+        private readonly Func<List<Product>> _getAllProducts;
+        private readonly Func<string, Product> _searchProduct;
+        private readonly Action<string, Product> _updateProduct;
+        private readonly Action<string> _deleteProduct;
 
         public Inventory(string dbChoice)
         {
-            _dbChoice = dbChoice.ToLower();
             _sqlConnection = new InventorySql();
             _mongoConnection = new InventoryMongo();
+
+            bool useSql = dbChoice.ToLower() == "sql";
+            _addProduct = useSql ? _sqlConnection.AddProduct : _mongoConnection.AddProduct;
+            _getAllProducts = useSql ? _sqlConnection.GetAllProducts : _mongoConnection.GetAllProducts;
+            _searchProduct = useSql ? _sqlConnection.SearchProduct : _mongoConnection.SearchProduct;
+            _updateProduct = useSql ? _sqlConnection.UpdateProduct : _mongoConnection.UpdateProduct;
+            _deleteProduct = useSql ? _sqlConnection.DeleteProduct : _mongoConnection.DeleteProduct;
         }
 
         public void Add_product(Product product)
         {
             try
             {
-                if (_dbChoice == "sql")
-                    _sqlConnection.AddProduct(product);
-                else
-                    _mongoConnection.AddProduct(product);
-
+                _addProduct(product);
                 Console.WriteLine($"Product {product.Name} added successfully.");
             }
             catch (Exception ex)
@@ -36,11 +42,9 @@ namespace Inventory_Management_System.Services
             }
         }
 
-
         public void View_products()
         {
-            List<Product> products = (_dbChoice == "sql") ? _sqlConnection.GetAllProducts() : _mongoConnection.GetAllProducts();
-
+            List<Product> products = _getAllProducts();
             if (products.Count == 0)
             {
                 Console.WriteLine("No products available.");
@@ -56,8 +60,7 @@ namespace Inventory_Management_System.Services
 
         public void Edit_product(string product_name)
         {
-            Product existingProduct = (_dbChoice == "sql") ? _sqlConnection.SearchProduct(product_name) : _mongoConnection.SearchProduct(product_name);
-
+            Product existingProduct = _searchProduct(product_name);
             if (existingProduct == null)
             {
                 Console.WriteLine("Product not found.");
@@ -98,52 +101,32 @@ namespace Inventory_Management_System.Services
                 Console.Write("Invalid quantity.");
             }
 
-            if (_dbChoice == "sql")
-                _sqlConnection.UpdateProduct(product_name, existingProduct);
-            else
-                _mongoConnection.UpdateProduct(product_name, existingProduct);
-
+            _updateProduct(product_name, existingProduct);
             Console.WriteLine("Product updated successfully.");
         }
 
         public void Delete_product(string product_name)
         {
-            if (_dbChoice == "sql")
-            {
-                var existingProduct = _sqlConnection.SearchProduct(product_name);
-                if (existingProduct == null)
-                {
-                    Console.WriteLine("Product not found.");
-                    return;
-                }
-                _sqlConnection.DeleteProduct(product_name);
-            }
-            else
-            {
-                var existingProduct = _mongoConnection.SearchProduct(product_name);
-                if (existingProduct == null)
-                {
-                    Console.WriteLine("Product not found.");
-                    return;
-                }
-                _mongoConnection.DeleteProduct(product_name);
-            }
-
-            Console.WriteLine($"Product {product_name} deleted successfully.");
-        }
-
-        public void search_for_product(string product_name)
-        {
-            Product product = (_dbChoice == "sql") ? _sqlConnection.SearchProduct(product_name) : _mongoConnection.SearchProduct(product_name);
-
-            if (product == null)
+            Product existingProduct = _searchProduct(product_name);
+            if (existingProduct == null)
             {
                 Console.WriteLine("Product not found.");
                 return;
             }
 
+            _deleteProduct(product_name);
+            Console.WriteLine($"Product {product_name} deleted successfully.");
+        }
+
+        public void search_for_product(string product_name)
+        {
+            Product product = _searchProduct(product_name);
+            if (product == null)
+            {
+                Console.WriteLine("Product not found.");
+                return;
+            }
             Console.WriteLine($"Product Found:\nName: {product.Name}\nPrice: {product.Price}\nQuantity: {product.Quantity}");
         }
     }
-
 }
