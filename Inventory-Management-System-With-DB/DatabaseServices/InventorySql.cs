@@ -5,11 +5,12 @@ using Inventory_Management_System.Models;
 using Inventory_Management_System.DataBaseConnection;
 using System.Reflection;
 using System.ComponentModel.Design;
+using Inventory_Management_System.Interfaces;
 
 namespace Inventory_Management_System.Services
 {
-	public class InventorySql
-	{
+	public class InventorySql : IInventory
+    {
 		private readonly SQLMSConnections _sqlmsConnections;
 
 		public InventorySql()

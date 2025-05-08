@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using Inventory_Management_System.Interfaces;
 using Inventory_Management_System.Models;
 using Inventory_Management_System.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Inventory_Management_System
@@ -9,21 +12,20 @@ namespace Inventory_Management_System
     {
         static void Main(string[] args)
         {
-           
+            
+            var factory = new InventoryFactory(); 
 
-            Console.WriteLine("Choose your database:");
-            Console.WriteLine("Type 'SQL' for Microsoft SQL Server or 'Mongo' for MongoDB");
-            string dbChoice = Console.ReadLine().Trim().ToLower();
-
-            while (dbChoice != "sql" && dbChoice != "mongo")
+            IInventory dbInstance = null;
+            while (dbInstance == null)
             {
-                Console.WriteLine("Invalid choice. Please type 'SQL' or 'Mongo'.");
-                dbChoice = Console.ReadLine().Trim().ToLower();
+                Console.Write("Choose your database (SQL/Mongo): ");
+                string dbChoice = Console.ReadLine();
+                dbInstance = factory.Create(dbChoice);
             }
 
-            var inventory = new Inventory(dbChoice);
-
+            var inventory = new Inventory(dbInstance);
             string product_name;
+            
 
             while (true)
             {
@@ -69,29 +71,51 @@ namespace Inventory_Management_System
                             Console.Write("Invalid quantity input. Please enter a valid quantity: ");
                         }
 
-                        inventory.Add_product(new Product(name, price, quantity));
+                        inventory.AddProduct(new Product(name, price, quantity));
                         break;
 
                     case "2":
-                        inventory.View_products();
+                        List<Product> products = inventory.ViewProducts();
+                        if (products.Count == 0)
+                        {
+                            Console.WriteLine("No products found.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("All Products:");
+                            foreach (var p in products)
+                            {
+                                Console.WriteLine($"Name: {p.Name}, Price: {p.Price}, Quantity: {p.Quantity}");
+                            }
+                        }
+
                         break;
 
                     case "3":
                         Console.Write("Enter the name of the product you want to edit: ");
                         product_name = Console.ReadLine();
-                        inventory.Edit_product(product_name);
+                        inventory.EditProduct(product_name);
                         break;
 
                     case "4":
                         Console.Write("Enter the name of the product you want to delete: ");
                         product_name = Console.ReadLine();
-                        inventory.Delete_product(product_name);
+                        inventory.DeleteProduct(product_name);
                         break;
 
                     case "5":
                         Console.Write("Enter the name of the product you want to search: ");
-                        product_name = Console.ReadLine();
-                        inventory.search_for_product(product_name);
+                         product_name = Console.ReadLine();
+                        Product foundProduct = inventory.search_for_product(product_name);
+                        if (foundProduct != null)
+                        {
+                            Console.WriteLine($"Product found: Name: {foundProduct.Name}, Price: {foundProduct.Price}, Quantity: {foundProduct.Quantity}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Product not found.");
+                        }
+
                         break;
 
                     case "6":

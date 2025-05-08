@@ -6,34 +6,21 @@ using Inventory_Management_System.DataBaseConnection;
 
 namespace Inventory_Management_System.Services
 {
-    public class Inventory : IInventory
+
+    public class Inventory
     {
-        private readonly InventorySql _sqlConnection;
-        private readonly InventoryMongo _mongoConnection;
-        private readonly Action<Product> _addProduct;
-        private readonly Func<List<Product>> _getAllProducts;
-        private readonly Func<string, Product> _searchProduct;
-        private readonly Action<string, Product> _updateProduct;
-        private readonly Action<string> _deleteProduct;
+        private readonly IInventory _inventoryDb;
 
-        public Inventory(string dbChoice)
+        public Inventory(IInventory inventoryDb)
         {
-            _sqlConnection = new InventorySql();
-            _mongoConnection = new InventoryMongo();
-
-            bool useSql = dbChoice.ToLower() == "sql";
-            _addProduct = useSql ? _sqlConnection.AddProduct : _mongoConnection.AddProduct;
-            _getAllProducts = useSql ? _sqlConnection.GetAllProducts : _mongoConnection.GetAllProducts;
-            _searchProduct = useSql ? _sqlConnection.SearchProduct : _mongoConnection.SearchProduct;
-            _updateProduct = useSql ? _sqlConnection.UpdateProduct : _mongoConnection.UpdateProduct;
-            _deleteProduct = useSql ? _sqlConnection.DeleteProduct : _mongoConnection.DeleteProduct;
+            _inventoryDb = inventoryDb;
         }
 
-        public void Add_product(Product product)
+        public void AddProduct(Product product)
         {
             try
             {
-                _addProduct(product);
+                _inventoryDb.AddProduct(product);
                 Console.WriteLine($"Product {product.Name} added successfully.");
             }
             catch (Exception ex)
@@ -42,25 +29,13 @@ namespace Inventory_Management_System.Services
             }
         }
 
-        public void View_products()
-        {
-            List<Product> products = _getAllProducts();
-            if (products.Count == 0)
-            {
-                Console.WriteLine("No products available.");
-                return;
-            }
+        public List<Product> ViewProducts() => _inventoryDb.GetAllProducts();
 
-            Console.WriteLine("\nList of products:");
-            foreach (var product in products)
-            {
-                Console.WriteLine(product.ToString());
-            }
-        }
+        public Product search_for_product(string name) => _inventoryDb.SearchProduct(name);
 
-        public void Edit_product(string product_name)
+        public void EditProduct(string oldName)
         {
-            Product existingProduct = _searchProduct(product_name);
+            Product existingProduct = _inventoryDb.SearchProduct(oldName);
             if (existingProduct == null)
             {
                 Console.WriteLine("Product not found.");
@@ -68,65 +43,38 @@ namespace Inventory_Management_System.Services
             }
 
             Console.WriteLine($"Editing {existingProduct.Name} product");
+
             Console.Write("Enter new name (leave empty to keep current): ");
             string new_name = Console.ReadLine();
             if (!string.IsNullOrEmpty(new_name))
                 existingProduct.Name = new_name;
 
-            while (true)
-            {
-                Console.Write("Enter new price (leave empty to keep current): ");
-                string new_price = Console.ReadLine();
-                if (string.IsNullOrEmpty(new_price)) break;
+            Console.Write("Enter new price (leave empty to keep current): ");
+            string new_price = Console.ReadLine();
+            if (decimal.TryParse(new_price, out decimal price))
+                existingProduct.Price = price;
 
-                if (decimal.TryParse(new_price, out decimal price) && price >= 0)
-                {
-                    existingProduct.Price = price;
-                    break;
-                }
-                Console.Write("Invalid price. ");
-            }
+            Console.Write("Enter new quantity (leave empty to keep current): ");
+            string new_quantity = Console.ReadLine();
+            if (decimal.TryParse(new_quantity, out decimal quantity))
+                existingProduct.Quantity = quantity;
 
-            while (true)
-            {
-                Console.Write("Enter new quantity (leave empty to keep current): ");
-                string new_quantity = Console.ReadLine();
-                if (string.IsNullOrEmpty(new_quantity)) break;
-
-                if (decimal.TryParse(new_quantity, out decimal quantity) && quantity >= 0)
-                {
-                    existingProduct.Quantity = quantity;
-                    break;
-                }
-                Console.Write("Invalid quantity.");
-            }
-
-            _updateProduct(product_name, existingProduct);
+            _inventoryDb.UpdateProduct(oldName, existingProduct);
             Console.WriteLine("Product updated successfully.");
         }
 
-        public void Delete_product(string product_name)
+        public void DeleteProduct(string name)
         {
-            Product existingProduct = _searchProduct(product_name);
+            Product existingProduct = _inventoryDb.SearchProduct(name);
             if (existingProduct == null)
             {
                 Console.WriteLine("Product not found.");
                 return;
             }
 
-            _deleteProduct(product_name);
-            Console.WriteLine($"Product {product_name} deleted successfully.");
-        }
-
-        public void search_for_product(string product_name)
-        {
-            Product product = _searchProduct(product_name);
-            if (product == null)
-            {
-                Console.WriteLine("Product not found.");
-                return;
-            }
-            Console.WriteLine($"Product Found:\nName: {product.Name}\nPrice: {product.Price}\nQuantity: {product.Quantity}");
+            _inventoryDb.DeleteProduct(name);
+            Console.WriteLine($"Product {name} deleted successfully.");
         }
     }
+
 }

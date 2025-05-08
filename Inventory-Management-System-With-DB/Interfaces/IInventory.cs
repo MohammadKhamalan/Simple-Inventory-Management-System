@@ -1,13 +1,14 @@
 ﻿using Inventory_Management_System.Models;
+using System.Collections.Generic;
 
 namespace Inventory_Management_System.Interfaces
 {
     public interface IInventory
     {
-        void Add_product(Product product);
-        void View_products();
-        void Edit_product(string product_name);
-        void Delete_product(string product_name);
-        void search_for_product(string product_name);
+        void AddProduct(Product product);
+        List<Product> GetAllProducts();                        
+        Product SearchProduct(string productName);             
+        void UpdateProduct(string oldName, Product updated);   
+        void DeleteProduct(string productName);
     }
 }

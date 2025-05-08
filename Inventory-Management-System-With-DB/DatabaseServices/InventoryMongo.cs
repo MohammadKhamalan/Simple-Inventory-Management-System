@@ -2,10 +2,11 @@ using MongoDB.Driver;
 using Inventory_Management_System.Models;
 using Inventory_Management_System.DataBaseConnection; 
 using System.Collections.Generic;
+using Inventory_Management_System.Interfaces;
 
 namespace Inventory_Management_System.Services
 {
-    public class InventoryMongo
+    public class InventoryMongo : IInventory
     {
         private readonly IMongoCollection<Product> _productsCollection;
 
